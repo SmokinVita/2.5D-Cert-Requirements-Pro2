@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ClimpUpBehaviour : StateMachineBehaviour
+public class RollBehaviour : StateMachineBehaviour
 {
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     //override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
@@ -19,13 +19,10 @@ public class ClimpUpBehaviour : StateMachineBehaviour
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        //Communicate with the player class
-        //play idle Animation
-        //snap position to the finish pos
         PlayerController player = animator.gameObject.transform.parent.GetComponent<PlayerController>();
         if(player != null)
         {
-            player.SetPlayerPosition();
+            player.SetPlayerPositionAfterRoll();
         }
     }
 

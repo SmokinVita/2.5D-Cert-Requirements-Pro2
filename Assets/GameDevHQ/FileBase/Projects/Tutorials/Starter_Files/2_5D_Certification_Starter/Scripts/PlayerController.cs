@@ -20,6 +20,10 @@ public class PlayerController : MonoBehaviour
     private bool _jumping;
     private bool _holdingLedge;
 
+    [SerializeField]
+    private Transform _rollEndPOS;
+    private bool _isRolling;
+
 
     [SerializeField]
     private CharacterController _charController;
@@ -44,9 +48,9 @@ public class PlayerController : MonoBehaviour
     {
         CalculateMovement();
 
-        if(Input.GetKeyDown(KeyCode.E))
+        if (Input.GetKeyDown(KeyCode.E))
         {
-            if(_holdingLedge == true)
+            if (_holdingLedge == true)
             {
                 _anim.SetTrigger("ClimpLedge");
             }
@@ -77,7 +81,12 @@ public class PlayerController : MonoBehaviour
                 transform.localEulerAngles = facing;
             }
 
-
+            if (Input.GetKeyDown(KeyCode.R) && _isRolling == false)
+            {
+                _anim.SetTrigger("Roll");
+                _charController.enabled = false;
+                _isRolling = true;
+            }
 
             if (Input.GetKeyDown(KeyCode.Space))
             {
@@ -115,9 +124,19 @@ public class PlayerController : MonoBehaviour
 
     public void SetPlayerPosition()
     {
-        
+
         transform.position = _activeLedge.GetStandPos();
         _charController.enabled = true;
         _anim.SetBool("HoldingLedge", false);
+    }
+
+    public void SetPlayerPositionAfterRoll()
+    {
+
+        Debug.Log($"Roll Ending Position: {_rollEndPOS.position}");
+        Debug.Log($"Current Player Position: {transform.position}");
+        transform.position = _rollEndPOS.position;
+        _isRolling = false;
+        _charController.enabled = true;
     }
 }
