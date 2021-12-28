@@ -81,7 +81,7 @@ public class PlayerController : MonoBehaviour
                 transform.localEulerAngles = facing;
             }
 
-            if (Input.GetKeyDown(KeyCode.R) && _isRolling == false)
+            if (Input.GetKeyDown(KeyCode.LeftShift) && _isRolling == false)
             {
                 _anim.SetTrigger("Roll");
                 _charController.enabled = false;
