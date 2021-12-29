@@ -24,7 +24,7 @@ public class Elevator : MonoBehaviour
         }
     }
 
-    void Update()
+    void FixedUpdate()
     {
         transform.position = Vector3.MoveTowards(transform.position, _elevatorLevels[_currentTarget].position, _speed * Time.deltaTime);
 
@@ -34,6 +34,22 @@ public class Elevator : MonoBehaviour
             StartCoroutine(ElevatorDelayRoutine());
         }
 
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        if(other.CompareTag("Player"))
+        {
+            other.transform.parent = transform;
+        }
+    }
+
+    void OnTriggerExit(Collider other)
+    {
+        if(other.CompareTag("Player"))
+        {
+            other.transform.parent = null;
+        }
     }
 
     private IEnumerator ElevatorDelayRoutine()

@@ -1,5 +1,5 @@
 Done - Prefab
-Elevator lift, platform should move between floors with a 5 second delay at each level.
+Done - Elevator lift, platform should move between floors with a 5 second delay at each level.
 Collectable
 Moving platform
 Ladder System
