@@ -1,7 +1,7 @@
 Done - Prefab
 Done - Elevator lift, platform should move between floors with a 5 second delay at each level.
 Collectable
-Moving platform
+Done - Moving platform
 Ladder System
 Done - Player Roll animation
 Idle Jump Animation
