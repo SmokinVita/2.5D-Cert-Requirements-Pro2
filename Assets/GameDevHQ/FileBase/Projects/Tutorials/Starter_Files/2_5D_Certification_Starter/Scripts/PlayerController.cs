@@ -1,8 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class PlayerController : MonoBehaviour
+
 {
     //speed
     [SerializeField]
@@ -19,6 +18,10 @@ public class PlayerController : MonoBehaviour
     private bool _canDoubleJump;
     private bool _jumping;
     private bool _holdingLedge;
+    private bool _climpLadder;
+
+    [SerializeField]
+    private Transform _climpTopLimit, _climbBottomLimit;
 
     [SerializeField]
     private Transform _rollEndPOS;
@@ -29,6 +32,9 @@ public class PlayerController : MonoBehaviour
     private CharacterController _charController;
     private Animator _anim;
     private LedgeGrab _activeLedge;
+
+    [SerializeField]
+    private int _coins = 0;
 
     void Start()
     {
@@ -46,7 +52,15 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        CalculateMovement();
+        if (_climpLadder == true)
+        {
+            ClimpLadder();
+        }
+        else
+        {
+            CalculateMovement();
+        }
+
 
         if (Input.GetKeyDown(KeyCode.E))
         {
@@ -54,6 +68,26 @@ public class PlayerController : MonoBehaviour
             {
                 _anim.SetTrigger("ClimpLedge");
             }
+        }
+    }
+
+    private void ClimpLadder()
+    {
+        float vertical = Input.GetAxis("Vertical");
+        _anim.SetFloat("ClimpLadderSpeed", Mathf.Abs(vertical));
+        //attach speed to animation
+        _direction = new Vector3(0, vertical);
+        _velocity = _direction * _playerSpeed;
+
+        _charController.Move(_velocity * Time.deltaTime);
+
+        if (transform.position.y >= _climpTopLimit.position.y)
+        {
+            transform.position = _climpTopLimit.position;
+        }
+        else if (transform.position.y <= _climbBottomLimit.position.y)
+        {
+            transform.position = _climbBottomLimit.position;
         }
     }
 
@@ -132,11 +166,29 @@ public class PlayerController : MonoBehaviour
 
     public void SetPlayerPositionAfterRoll()
     {
-
-        Debug.Log($"Roll Ending Position: {_rollEndPOS.position}");
-        Debug.Log($"Current Player Position: {transform.position}");
         transform.position = _rollEndPOS.position;
         _isRolling = false;
         _charController.enabled = true;
+    }
+
+    public void PlayerOnLadder(Transform ladderPos, Transform bottomPOS, Transform topPOS)
+    {
+        transform.position = ladderPos.position;
+        _climbBottomLimit = bottomPOS;
+        _climpTopLimit = topPOS;
+        _climpLadder = true;
+        _anim.SetBool("ClimbingLadder", true);
+
+    }
+    public void PlayerOffLadder()
+    {
+        _climpLadder = false;
+        _anim.SetBool("ClimbingLadder", false);
+    }
+
+    public void AddCoins(int coinAmount)
+    {
+        _coins += coinAmount;
+        UIManager.instance.UpdateCoinText(coinAmount);
     }
 }
