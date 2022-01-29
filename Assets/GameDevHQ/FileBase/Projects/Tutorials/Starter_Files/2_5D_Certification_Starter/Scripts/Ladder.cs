@@ -5,10 +5,9 @@ using UnityEngine;
 public class Ladder : MonoBehaviour
 {
 
+    //know the starting and ending pos. Ending pos will be when the character finish getting off ladder
     [SerializeField]
-    private Transform _bottonLadderPOS, _topLadderPOS;
-
-    private bool _onLadder;
+    private Transform _startPos, _endPos;
 
     void OnTriggerStay(Collider other)
     {
@@ -19,9 +18,14 @@ public class Ladder : MonoBehaviour
             {
                 if(Input.GetKeyDown(KeyCode.F))
                 {
-                    player.PlayerOnLadder(transform, _bottonLadderPOS, _topLadderPOS);
+                    player.PlayerOnLadder(_startPos.position, this);
                 }
             }
         }
+    }
+
+    public Vector3 OffLadderPos()
+    {
+        return _endPos.position;
     }
 }

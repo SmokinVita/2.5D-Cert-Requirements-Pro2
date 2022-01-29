@@ -4,5 +4,5 @@ Done - Collectable
 Done - Moving platform
 In Progress - Ladder System
 Done - Player Roll animation
-Idle Jump Animation
+Done - Idle Jump Animation
 Done - Need to get the camera to move with Roll animation? Cinemachine Camera Follow

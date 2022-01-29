@@ -21,11 +21,10 @@ public class PlayerController : MonoBehaviour
     private bool _climpLadder;
 
     [SerializeField]
-    private Transform _climpTopLimit, _climbBottomLimit;
-
-    [SerializeField]
     private Transform _rollEndPOS;
     private bool _isRolling;
+
+    private Ladder _activeLadder;
 
 
     [SerializeField]
@@ -74,21 +73,12 @@ public class PlayerController : MonoBehaviour
     private void ClimpLadder()
     {
         float vertical = Input.GetAxis("Vertical");
-        _anim.SetFloat("ClimpLadderSpeed", Mathf.Abs(vertical));
         //attach speed to animation
+        _anim.SetFloat("ClimbLadderSpeed", Mathf.Abs(vertical));
         _direction = new Vector3(0, vertical);
         _velocity = _direction * _playerSpeed;
 
         _charController.Move(_velocity * Time.deltaTime);
-
-        if (transform.position.y >= _climpTopLimit.position.y)
-        {
-            transform.position = _climpTopLimit.position;
-        }
-        else if (transform.position.y <= _climbBottomLimit.position.y)
-        {
-            transform.position = _climbBottomLimit.position;
-        }
     }
 
     private void CalculateMovement()
@@ -171,18 +161,28 @@ public class PlayerController : MonoBehaviour
         _charController.enabled = true;
     }
 
-    public void PlayerOnLadder(Transform ladderPos, Transform bottomPOS, Transform topPOS)
+    public void PlayerOnLadder(Vector3 position, Ladder ladder)
     {
-        transform.position = ladderPos.position;
-        _climbBottomLimit = bottomPOS;
-        _climpTopLimit = topPOS;
+        transform.position = position;
         _climpLadder = true;
         _anim.SetBool("ClimbingLadder", true);
+        _activeLadder = ladder;
 
     }
-    public void PlayerOffLadder()
+
+    public void PlayerGetOffLadder()
     {
+        Debug.Log("Called PlayerGetOffLadder");
+        _charController.enabled = false;
+        _anim.SetBool("ClimbOffLadder", true);
+    }
+
+    public void PlayerOffLadder()
+    { 
+        transform.position = _activeLadder.OffLadderPos();
         _climpLadder = false;
+        _charController.enabled = true;
+        _anim.SetBool("ClimbOffLadder", false);
         _anim.SetBool("ClimbingLadder", false);
     }
 
