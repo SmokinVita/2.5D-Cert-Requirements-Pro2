@@ -17,7 +17,6 @@ public class Elevator : MonoBehaviour
 
     void Start()
     {
-        Debug.Log(transform.position);
         if (transform.position == _elevatorLevels[_currentTarget].position)
         {
             StartCoroutine(ElevatorDelayRoutine());

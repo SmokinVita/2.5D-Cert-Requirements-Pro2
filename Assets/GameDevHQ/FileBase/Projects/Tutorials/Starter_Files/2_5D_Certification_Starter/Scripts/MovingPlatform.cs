@@ -34,6 +34,7 @@ public class MovingPlatform : MonoBehaviour
         if(other.CompareTag("Player"))
         {
             other.transform.parent = transform;
+            Debug.Log("Player is on Platform!");
         }
     }
 
@@ -42,6 +43,7 @@ public class MovingPlatform : MonoBehaviour
         if(other.CompareTag("Player"))
         {
             other.transform.parent = null;
+            Debug.Log("Player is off of the platform!");
         }
     }
 }

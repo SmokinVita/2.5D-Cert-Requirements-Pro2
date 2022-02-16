@@ -1,8 +1,12 @@
 ﻿using UnityEngine;
 
 public class PlayerController : MonoBehaviour
-
 {
+
+    [SerializeField]
+    private Transform _respawnPoint;
+    [SerializeField]
+    private int _lives = 3;
     //speed
     [SerializeField]
     private float _playerSpeed = 2f;
@@ -11,6 +15,8 @@ public class PlayerController : MonoBehaviour
     private float _gravity = -9.81f;
     [SerializeField]
     private float _jumpHeight = 2f;
+    [SerializeField]
+    private float _pushPower = 3f;
     //direction
     private Vector3 _direction, _velocity;
     private float _yVelocity;
@@ -67,6 +73,31 @@ public class PlayerController : MonoBehaviour
             {
                 _anim.SetTrigger("ClimpLedge");
             }
+        }
+    }
+
+    private void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        if (hit.collider.CompareTag("Moveable"))
+        {
+            Debug.Log("Hit cube.");
+            if (hit.collider.attachedRigidbody == null)
+            {
+                Debug.Log($"{hit.collider.name} does not have it's RigidBody!!");
+                return;
+            }
+
+            if(hit.moveDirection.y <= -3.0f)
+            {
+                Debug.Log("Move Direction on y is less than -3.0f");
+                return;
+            }
+
+            Vector3 pushDir = new Vector3(0, 0, hit.moveDirection.z);
+            hit.collider.attachedRigidbody.velocity = pushDir * _pushPower;
+            Debug.Log("Move Direction" + hit.moveDirection.z);
+            Debug.Log("PushDir:" + pushDir + "And PushPower" + _pushPower);
+            Debug.Log("Objects Velocity" + hit.collider.attachedRigidbody.velocity);
         }
     }
 
@@ -190,5 +221,23 @@ public class PlayerController : MonoBehaviour
     {
         _coins += coinAmount;
         UIManager.instance.UpdateCoinText(coinAmount);
+    }
+
+    public void Damage()
+    {
+        _lives--;
+
+        if(_lives <= 0)
+        {
+            Debug.Log("Player has ran out of lives.");
+        }
+        else
+        {
+            Debug.Log("Player is respawned!");
+            _charController.enabled = false;
+            transform.position = _respawnPoint.position;
+        }
+
+        _charController.enabled = true;
     }
 }

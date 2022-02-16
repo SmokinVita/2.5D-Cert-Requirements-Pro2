@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - Ledge_Grab_Checking
+  - Moveable
   layers:
   - Default
   - TransparentFX
